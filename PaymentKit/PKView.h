@@ -29,13 +29,14 @@
 @property (nonatomic, readonly) PKCardNumber *cardNumber;
 @property (nonatomic, readonly) PKCardExpiry *cardExpiry;
 @property (nonatomic, readonly) PKCardCVC *cardCVC;
-@property (nonatomic, readwrite) PKAddressZip *addressZip; // Oana change
+@property (nonatomic, readonly) PKAddressZip *addressZip;
 
 @property IBOutlet UIView *innerView;
 @property IBOutlet UIView *clipView;
 @property IBOutlet PKTextField *cardNumberField;
 @property IBOutlet PKTextField *cardExpiryField;
 @property IBOutlet PKTextField *cardCVCField;
+@property IBOutlet PKTextField *cardZipCodeField;
 @property IBOutlet UIImageView *placeholderView;
 @property (nonatomic, weak) id <PKViewDelegate> delegate;
 @property (readonly) PKCard *card;
