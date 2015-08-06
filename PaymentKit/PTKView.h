@@ -29,15 +29,19 @@
 @property (nonatomic, readonly) PTKCardNumber *cardNumber;
 @property (nonatomic, readonly) PTKCardExpiry *cardExpiry;
 @property (nonatomic, readonly) PTKCardCVC *cardCVC;
-@property (nonatomic, readonly) PTKAddressZip *addressZip;
+@property (nonatomic, readwrite) PTKAddressZip *addressZip; // Oana change
 
 @property IBOutlet UIView *innerView;
 @property IBOutlet UIView *clipView;
 @property IBOutlet PTKTextField *cardNumberField;
 @property IBOutlet PTKTextField *cardExpiryField;
 @property IBOutlet PTKTextField *cardCVCField;
+@property IBOutlet PTKTextField *cardZipCodeField; // Oana change
 @property IBOutlet UIImageView *placeholderView;
 @property (nonatomic, weak) id <PTKViewDelegate> delegate;
 @property (readonly) PTKCard *card;
+
+- (void)showKeyboard; // Oana change
+
 
 @end
