@@ -1,16 +1,20 @@
 //
-//  PKPaymentField.m
-//  PKPayment Example
+//  PTKPaymentField.m
+//  PTKPayment Example
 //
 //  Created by Alex MacCaw on 1/22/13.
 //  Copyright (c) 2013 Stripe. All rights reserved.
 //
+
+#import "PTKView.h"
+#import "PTKTextField.h"
 
 #define RGB(r,g,b) [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:1.0f]
 #define DarkGreyColor RGB(0,0,0)
 #define RedColor RGB(253,0,17)
 #define DefaultBoldFont [UIFont boldSystemFontOfSize:17]
 
+<<<<<<< HEAD:PaymentKit/PKView.m
 #define kPKViewPlaceholderViewAnimationDuration 0.25
 
 #define kPKViewCardExpiryFieldStartX 84 + 200
@@ -20,19 +24,28 @@
 #define kPKViewCardExpiryFieldEndX 28 // Oana change
 #define kPKViewCardCVCFieldEndX 101 // Oana change
 #define kPKViewCardZipCodeFieldEndX 160 // Oana change
+=======
+#define kPTKViewPlaceholderViewAnimationDuration 0.25
 
-#import "PKView.h"
-#import "PKTextField.h"
+#define kPTKViewCardExpiryFieldStartX 84 + 200
+#define kPTKViewCardCVCFieldStartX 177 + 200
 
-@interface PKView () <PKTextFieldDelegate> {
+#define kPTKViewCardExpiryFieldEndX 84
+#define kPTKViewCardCVCFieldEndX 177
+>>>>>>> upstream/master:PaymentKit/PTKView.m
+
+static NSString *const kPTKLocalizedStringsTableName = @"PaymentKit";
+static NSString *const kPTKOldLocalizedStringsTableName = @"STPaymentLocalizable";
+
+@interface PTKView () <PTKTextFieldDelegate> {
 @private
     BOOL _isInitialState;
     BOOL _isValidState;
 }
 
 @property (nonatomic, readonly, assign) UIResponder *firstResponderField;
-@property (nonatomic, readonly, assign) PKTextField *firstInvalidField;
-@property (nonatomic, readonly, assign) PKTextField *nextFirstResponder;
+@property (nonatomic, readonly, assign) PTKTextField *firstInvalidField;
+@property (nonatomic, readonly, assign) PTKTextField *nextFirstResponder;
 
 - (void)setup;
 - (void)setupPlaceholderView;
@@ -40,7 +53,7 @@
 - (void)setupCardExpiryField;
 - (void)setupCardCVCField;
 
-- (void)pkTextFieldDidBackSpaceWhileTextIsEmpty:(PKTextField *)textField;
+- (void)pkTextFieldDidBackSpaceWhileTextIsEmpty:(PTKTextField *)textField;
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)replacementString;
 - (BOOL)cardNumberFieldShouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)replacementString;
@@ -48,15 +61,22 @@
 - (BOOL)cardCVCShouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)replacementString;
 
 @property (nonatomic) UIView *opaqueOverGradientView;
+<<<<<<< HEAD:PaymentKit/PKView.m
 @property (nonatomic) PKCardNumber *cardNumber;
 @property (nonatomic) PKCardExpiry *cardExpiry;
 @property (nonatomic) PKCardCVC *cardCVC;
 @property (nonatomic) PKAddressZip *addressZip; // Oana change
+=======
+@property (nonatomic) PTKCardNumber *cardNumber;
+@property (nonatomic) PTKCardExpiry *cardExpiry;
+@property (nonatomic) PTKCardCVC *cardCVC;
+@property (nonatomic) PTKAddressZip *addressZip;
+>>>>>>> upstream/master:PaymentKit/PTKView.m
 @end
 
 #pragma mark -
 
-@implementation PKView
+@implementation PTKView
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -128,8 +148,12 @@
 
 - (void)setupCardNumberField
 {
+<<<<<<< HEAD:PaymentKit/PKView.m
     self.cardNumberField = [[PKTextField alloc] initWithFrame:CGRectMake(12, 0, 170, 20)];
     
+=======
+    self.cardNumberField = [[PTKTextField alloc] initWithFrame:CGRectMake(12, 0, 170, 20)];
+>>>>>>> upstream/master:PaymentKit/PTKView.m
     self.cardNumberField.delegate = self;
     
     self.cardNumberField.placeholder = NSLocalizedStringFromTable(@"placeholder.card_number", @"STPaymentLocalizable", nil);
@@ -142,7 +166,7 @@
 
 - (void)setupCardExpiryField
 {
-    self.cardExpiryField = [[PKTextField alloc] initWithFrame:CGRectMake(kPKViewCardExpiryFieldStartX, 0, 60, 20)];
+    self.cardExpiryField = [[PTKTextField alloc] initWithFrame:CGRectMake(kPTKViewCardExpiryFieldStartX, 0, 60, 20)];
     self.cardExpiryField.delegate = self;
     self.cardExpiryField.placeholder = NSLocalizedStringFromTable(@"placeholder.card_expiry", @"STPaymentLocalizable", nil);
     self.cardExpiryField.keyboardType = UIKeyboardTypeNumberPad;
@@ -154,7 +178,7 @@
 
 - (void)setupCardCVCField
 {
-    self.cardCVCField = [[PKTextField alloc] initWithFrame:CGRectMake(kPKViewCardCVCFieldStartX, 0, 55, 20)];
+    self.cardCVCField = [[PTKTextField alloc] initWithFrame:CGRectMake(kPTKViewCardCVCFieldStartX, 0, 55, 20)];
     self.cardCVCField.delegate = self;
     self.cardCVCField.placeholder = NSLocalizedStringFromTable(@"placeholder.card_cvc", @"STPaymentLocalizable", nil);
     self.cardCVCField.keyboardType = UIKeyboardTypeNumberPad;
@@ -167,6 +191,7 @@
 // Oana change
 - (void)setupCardZipCodeField
 {
+<<<<<<< HEAD:PaymentKit/PKView.m
     self.cardZipCodeField = [[PKTextField alloc] initWithFrame:CGRectMake(kPKViewCardZipCodeFieldStartX, 0, 80, 20)];
     self.cardZipCodeField.delegate = self;
     self.cardZipCodeField.placeholder = @"ZIP Code";
@@ -175,24 +200,37 @@
     self.cardZipCodeField.font = DefaultBoldFont;
     
     [self.cardZipCodeField.layer setMasksToBounds:YES];
+=======
+    NSString *value = NSLocalizedStringFromTable(key, kPTKLocalizedStringsTableName, nil);
+    if (value && ![value isEqualToString:key]) { // key == no value
+        return value;
+    } else {
+        value = NSLocalizedStringFromTable(key, kPTKOldLocalizedStringsTableName, nil);
+        if (value && ![value isEqualToString:key]) {
+            return value;
+        }
+    }
+
+    return defaultValue;
+>>>>>>> upstream/master:PaymentKit/PTKView.m
 }
 ///
 
 #pragma mark - Accessors
 
-- (PKCardNumber *)cardNumber
+- (PTKCardNumber *)cardNumber
 {
-    return [PKCardNumber cardNumberWithString:self.cardNumberField.text];
+    return [PTKCardNumber cardNumberWithString:self.cardNumberField.text];
 }
 
-- (PKCardExpiry *)cardExpiry
+- (PTKCardExpiry *)cardExpiry
 {
-    return [PKCardExpiry cardExpiryWithString:self.cardExpiryField.text];
+    return [PTKCardExpiry cardExpiryWithString:self.cardExpiryField.text];
 }
 
-- (PKCardCVC *)cardCVC
+- (PTKCardCVC *)cardCVC
 {
-    return [PKCardCVC cardCVCWithString:self.cardCVCField.text];
+    return [PTKCardCVC cardCVCWithString:self.cardCVCField.text];
 }
 
 // Oana change
@@ -217,11 +255,11 @@
                               delay:0
                             options:(UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionAllowUserInteraction)
                          animations:^{
-                             self.cardExpiryField.frame = CGRectMake(kPKViewCardExpiryFieldStartX,
+                             self.cardExpiryField.frame = CGRectMake(kPTKViewCardExpiryFieldStartX,
                                      self.cardExpiryField.frame.origin.y,
                                      self.cardExpiryField.frame.size.width,
                                      self.cardExpiryField.frame.size.height);
-                             self.cardCVCField.frame = CGRectMake(kPKViewCardCVCFieldStartX,
+                             self.cardCVCField.frame = CGRectMake(kPTKViewCardCVCFieldStartX,
                                      self.cardCVCField.frame.origin.y,
                                      self.cardCVCField.frame.size.width,
                                      self.cardCVCField.frame.size.height);
@@ -239,9 +277,8 @@
                              [self.cardCVCField removeFromSuperview];
                              [self.cardZipCodeField removeFromSuperview]; // Oana change
                          }];
+        [self.cardNumberField becomeFirstResponder];
     }
-
-    [self.cardNumberField becomeFirstResponder];
 }
 
 - (void)stateMeta
@@ -276,11 +313,11 @@
                      } completion:^(BOOL finished) {
     }];
     [UIView animateWithDuration:0.400 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        self.cardExpiryField.frame = CGRectMake(kPKViewCardExpiryFieldEndX,
+        self.cardExpiryField.frame = CGRectMake(kPTKViewCardExpiryFieldEndX,
                 self.cardExpiryField.frame.origin.y,
                 self.cardExpiryField.frame.size.width,
                 self.cardExpiryField.frame.size.height);
-        self.cardCVCField.frame = CGRectMake(kPKViewCardCVCFieldEndX,
+        self.cardCVCField.frame = CGRectMake(kPTKViewCardCVCFieldEndX,
                 self.cardCVCField.frame.origin.y,
                 self.cardCVCField.frame.size.width,
                 self.cardCVCField.frame.size.height);
@@ -318,9 +355,9 @@
     [self.cardCVC isValidWithType:self.cardNumber.cardType];
 }
 
-- (PKCard *)card
+- (PTKCard *)card
 {
-    PKCard *card = [[PKCard alloc] init];
+    PTKCard *card = [[PTKCard alloc] init];
     card.number = [self.cardNumber string];
     card.cvc = [self.cardCVC string];
     card.expMonth = [self.cardExpiry month];
@@ -334,7 +371,7 @@
 {
     if (![self.placeholderView.image isEqual:image]) {
         __block __unsafe_unretained UIView *previousPlaceholderView = self.placeholderView;
-        [UIView animateWithDuration:kPKViewPlaceholderViewAnimationDuration delay:0
+        [UIView animateWithDuration:kPTKViewPlaceholderViewAnimationDuration delay:0
                             options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
                              self.placeholderView.layer.opacity = 0.0;
@@ -349,7 +386,7 @@
         self.placeholderView.layer.opacity = 0.0;
         self.placeholderView.layer.transform = CATransform3DMakeScale(0.8, 0.8, 0.8);
         [self insertSubview:self.placeholderView belowSubview:previousPlaceholderView];
-        [UIView animateWithDuration:kPKViewPlaceholderViewAnimationDuration delay:0
+        [UIView animateWithDuration:kPTKViewPlaceholderViewAnimationDuration delay:0
                             options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
                              self.placeholderView.layer.opacity = 1.0;
@@ -361,10 +398,10 @@
 
 - (void)setPlaceholderToCVC
 {
-    PKCardNumber *cardNumber = [PKCardNumber cardNumberWithString:self.cardNumberField.text];
-    PKCardType cardType = [cardNumber cardType];
+    PTKCardNumber *cardNumber = [PTKCardNumber cardNumberWithString:self.cardNumberField.text];
+    PTKCardType cardType = [cardNumber cardType];
 
-    if (cardType == PKCardTypeAmex) {
+    if (cardType == PTKCardTypeAmex) {
         [self setPlaceholderViewImage:[UIImage imageNamed:@"cvc-amex"]];
     } else {
         [self setPlaceholderViewImage:[UIImage imageNamed:@"cvc"]];
@@ -373,27 +410,27 @@
 
 - (void)setPlaceholderToCardType
 {
-    PKCardNumber *cardNumber = [PKCardNumber cardNumberWithString:self.cardNumberField.text];
-    PKCardType cardType = [cardNumber cardType];
+    PTKCardNumber *cardNumber = [PTKCardNumber cardNumberWithString:self.cardNumberField.text];
+    PTKCardType cardType = [cardNumber cardType];
     NSString *cardTypeName = @"placeholder";
 
     switch (cardType) {
-        case PKCardTypeAmex:
+        case PTKCardTypeAmex:
             cardTypeName = @"amex";
             break;
-        case PKCardTypeDinersClub:
+        case PTKCardTypeDinersClub:
             cardTypeName = @"diners";
             break;
-        case PKCardTypeDiscover:
+        case PTKCardTypeDiscover:
             cardTypeName = @"discover";
             break;
-        case PKCardTypeJCB:
+        case PTKCardTypeJCB:
             cardTypeName = @"jcb";
             break;
-        case PKCardTypeMasterCard:
+        case PTKCardTypeMasterCard:
             cardTypeName = @"mastercard";
             break;
-        case PKCardTypeVisa:
+        case PTKCardTypeVisa:
             cardTypeName = @"visa";
             break;
         default:
@@ -441,7 +478,7 @@
     return YES;
 }
 
-- (void)pkTextFieldDidBackSpaceWhileTextIsEmpty:(PKTextField *)textField
+- (void)pkTextFieldDidBackSpaceWhileTextIsEmpty:(PTKTextField *)textField
 {
     if (textField == self.cardZipCodeField) // Oana change
         [self.cardCVCField becomeFirstResponder]; // Oana change
@@ -454,8 +491,8 @@
 - (BOOL)cardNumberFieldShouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)replacementString
 {
     NSString *resultString = [self.cardNumberField.text stringByReplacingCharactersInRange:range withString:replacementString];
-    resultString = [PKTextField textByRemovingUselessSpacesFromString:resultString];
-    PKCardNumber *cardNumber = [PKCardNumber cardNumberWithString:resultString];
+    resultString = [PTKTextField textByRemovingUselessSpacesFromString:resultString];
+    PTKCardNumber *cardNumber = [PTKCardNumber cardNumberWithString:resultString];
 
     if (![cardNumber isPartiallyValid])
         return NO;
@@ -485,8 +522,8 @@
 - (BOOL)cardExpiryShouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)replacementString
 {
     NSString *resultString = [self.cardExpiryField.text stringByReplacingCharactersInRange:range withString:replacementString];
-    resultString = [PKTextField textByRemovingUselessSpacesFromString:resultString];
-    PKCardExpiry *cardExpiry = [PKCardExpiry cardExpiryWithString:resultString];
+    resultString = [PTKTextField textByRemovingUselessSpacesFromString:resultString];
+    PTKCardExpiry *cardExpiry = [PTKCardExpiry cardExpiryWithString:resultString];
 
     if (![cardExpiry isPartiallyValid]) return NO;
 
@@ -515,9 +552,9 @@
 - (BOOL)cardCVCShouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)replacementString
 {
     NSString *resultString = [self.cardCVCField.text stringByReplacingCharactersInRange:range withString:replacementString];
-    resultString = [PKTextField textByRemovingUselessSpacesFromString:resultString];
-    PKCardCVC *cardCVC = [PKCardCVC cardCVCWithString:resultString];
-    PKCardType cardType = [[PKCardNumber cardNumberWithString:self.cardNumberField.text] cardType];
+    resultString = [PTKTextField textByRemovingUselessSpacesFromString:resultString];
+    PTKCardCVC *cardCVC = [PTKCardCVC cardCVCWithString:resultString];
+    PTKCardType cardType = [[PTKCardNumber cardNumberWithString:self.cardNumberField.text] cardType];
 
     // Restrict length
     if (![cardCVC isPartiallyValidWithType:cardType]) return NO;
@@ -612,13 +649,13 @@
     return nil;
 }
 
-- (PKTextField *)firstInvalidField;
+- (PTKTextField *)firstInvalidField;
 {
-    if (![[PKCardNumber cardNumberWithString:self.cardNumberField.text] isValid])
+    if (![[PTKCardNumber cardNumberWithString:self.cardNumberField.text] isValid])
         return self.cardNumberField;
-    else if (![[PKCardExpiry cardExpiryWithString:self.cardExpiryField.text] isValid])
+    else if (![[PTKCardExpiry cardExpiryWithString:self.cardExpiryField.text] isValid])
         return self.cardExpiryField;
-    else if (![[PKCardCVC cardCVCWithString:self.cardCVCField.text] isValid])
+    else if (![[PTKCardCVC cardCVCWithString:self.cardCVCField.text] isValid])
         return self.cardCVCField;
     else if (([PKTextField textByRemovingUselessSpacesFromString:self.cardZipCodeField.text].length > 0) && ![[PKAddressZip addressZipWithString:self.cardZipCodeField.text] isValid]) // Oana change
         return self.cardZipCodeField;
@@ -626,7 +663,7 @@
     return nil;
 }
 
-- (PKTextField *)nextFirstResponder;
+- (PTKTextField *)nextFirstResponder;
 {
     if (self.firstInvalidField)
         return self.firstInvalidField;
@@ -656,6 +693,8 @@
 
 - (BOOL)resignFirstResponder;
 {
+    [super resignFirstResponder];
+    
     return [self.firstResponderField resignFirstResponder];
 }
 

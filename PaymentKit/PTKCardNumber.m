@@ -1,14 +1,14 @@
 //
 //  CardNumber.m
-//  PKPayment Example
+//  PTKPayment Example
 //
 //  Created by Alex MacCaw on 1/22/13.
 //  Copyright (c) 2013 Stripe. All rights reserved.
 //
 
-#import "PKCardNumber.h"
+#import "PTKCardNumber.h"
 
-@implementation PKCardNumber {
+@implementation PTKCardNumber {
 @private
     NSString *_number;
 }
@@ -30,29 +30,49 @@
     return self;
 }
 
-- (PKCardType)cardType
+- (PTKCardType)cardType
 {
     if (_number.length < 2) {
-        return PKCardTypeUnknown;
+        return PTKCardTypeUnknown;
     }
 
     NSString *firstChars = [_number substringWithRange:NSMakeRange(0, 2)];
     NSInteger range = [firstChars integerValue];
-
+    
     if (range >= 40 && range <= 49) {
-        return PKCardTypeVisa;
+        return PTKCardTypeVisa;
     } else if (range >= 50 && range <= 59) {
-        return PKCardTypeMasterCard;
+        return PTKCardTypeMasterCard;
     } else if (range == 34 || range == 37) {
-        return PKCardTypeAmex;
-    } else if (range == 60 || range == 62 || range == 64 || range == 65) {
-        return PKCardTypeDiscover;
+        return PTKCardTypeAmex;
+    } else if ([_number hasPrefix:@"6011"] || [_number hasPrefix:@"65"]) {
+        return PTKCardTypeDiscover;
+    } else if ([_number hasPrefix:@"622"]) {
+        // If the number has a prefix in the range 622126-622925, it's Discover
+        NSUInteger prefixLength = 6;
+        if (_number.length >= prefixLength) {
+            NSInteger sixDigitPrefix = [[_number substringWithRange:NSMakeRange(0, prefixLength)] integerValue];
+            if ((sixDigitPrefix >= 622126) && (sixDigitPrefix <= 622925)) {
+                return PTKCardTypeDiscover;
+            }
+        }
+        return PTKCardTypeUnknown;
+    } else if (range == 64) {
+        // If the number has a prefix in the range 644-649, it's Discover
+        NSUInteger prefixLength = 3;
+        if (_number.length >= prefixLength) {
+            NSInteger threeDigitPrefix = [[_number substringWithRange:NSMakeRange(0, prefixLength)] integerValue];
+            if ((threeDigitPrefix >= 644) && (threeDigitPrefix <= 649)) {
+                return PTKCardTypeDiscover;
+            }
+        }
+        return PTKCardTypeUnknown;
     } else if (range == 35) {
-        return PKCardTypeJCB;
+        return PTKCardTypeJCB;
     } else if (range == 30 || range == 36 || range == 38 || range == 39) {
-        return PKCardTypeDinersClub;
+        return PTKCardTypeDinersClub;
     } else {
-        return PKCardTypeUnknown;
+        return PTKCardTypeUnknown;
     }
 }
 
@@ -67,7 +87,7 @@
 
 - (NSString *)lastGroup
 {
-    if (self.cardType == PKCardTypeAmex) {
+    if (self.cardType == PTKCardTypeAmex) {
         if (_number.length >= 5) {
             return [_number substringFromIndex:([_number length] - 5)];
         }
@@ -90,7 +110,7 @@
 {
     NSRegularExpression *regex;
 
-    if (self.cardType == PKCardTypeAmex) {
+    if (self.cardType == PTKCardTypeAmex) {
         regex = [NSRegularExpression regularExpressionWithPattern:@"(\\d{1,4})(\\d{1,6})?(\\d{1,5})?" options:0 error:NULL];
     } else {
         regex = [NSRegularExpression regularExpressionWithPattern:@"(\\d{1,4})" options:0 error:NULL];
@@ -123,7 +143,7 @@
         return string;
     }
 
-    if (self.cardType == PKCardTypeAmex) {
+    if (self.cardType == PTKCardTypeAmex) {
         regex = [NSRegularExpression regularExpressionWithPattern:@"^(\\d{4}|\\d{4}\\s\\d{6})$" options:0 error:NULL];
     } else {
         regex = [NSRegularExpression regularExpressionWithPattern:@"(?:^|\\s)(\\d{4})$" options:0 error:NULL];
@@ -171,16 +191,16 @@
 
 - (BOOL)isPartiallyValid
 {
-    return _number.length <= [self lengthForCardType];
+    return [self isValid] || _number.length < [self lengthForCardType];
 }
 
 - (NSInteger)lengthForCardType
 {
-    PKCardType type = self.cardType;
+    PTKCardType type = self.cardType;
     NSInteger length;
-    if (type == PKCardTypeAmex) {
+    if (type == PTKCardTypeAmex) {
         length = 15;
-    } else if (type == PKCardTypeDinersClub) {
+    } else if (type == PTKCardTypeDinersClub) {
         length = 14;
     } else {
         length = 16;
