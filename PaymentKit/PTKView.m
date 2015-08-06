@@ -57,7 +57,7 @@ static NSString *const kPTKOldLocalizedStringsTableName = @"STPaymentLocalizable
 @property (nonatomic) PTKCardNumber *cardNumber;
 @property (nonatomic) PTKCardExpiry *cardExpiry;
 @property (nonatomic) PTKCardCVC *cardCVC;
-@property (nonatomic) PTKAddressZip *addressZip;
+
 @end
 
 #pragma mark -
@@ -169,6 +169,8 @@ static NSString *const kPTKOldLocalizedStringsTableName = @"STPaymentLocalizable
     [self.cardCVCField.layer setMasksToBounds:YES];
 }
 
+#pragma mark - Oana change
+
 // Oana change
 - (void)setupCardZipCodeField
 {
@@ -182,6 +184,16 @@ static NSString *const kPTKOldLocalizedStringsTableName = @"STPaymentLocalizable
     [self.cardZipCodeField.layer setMasksToBounds:YES];
 }
 ///
+
+// Oana change
+- (void)fireCardNumberField {
+    [self.cardNumberField becomeFirstResponder];
+}
+
+// Oana change
+- (void)showKeyboard {
+    [[self nextFirstResponder] becomeFirstResponder];
+}
 
 #pragma mark - Accessors
 

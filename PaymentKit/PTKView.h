@@ -42,6 +42,6 @@
 @property (readonly) PTKCard *card;
 
 - (void)showKeyboard; // Oana change
-
+- (void)fireCardNumberField; // Oana change
 
 @end
