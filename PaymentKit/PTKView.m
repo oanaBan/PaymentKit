@@ -17,15 +17,11 @@
 
 #define kPTKViewCardExpiryFieldStartX 84 + 200
 #define kPTKViewCardCVCFieldStartX 177 + 200
+#define kPTKViewCardZipCodeFieldStartX 270 + 200 // Oana change
 
-#define kPKViewCardZipCodeFieldStartX 270 + 200 // Oana change
-
-#define kPKViewCardExpiryFieldEndX 28 // Oana change
-#define kPKViewCardCVCFieldEndX 101 // Oana change
-#define kPKViewCardZipCodeFieldEndX 160 // Oana change
-
-#define kPTKViewCardExpiryFieldEndX 84
-#define kPTKViewCardCVCFieldEndX 177
+#define kPTKViewCardExpiryFieldEndX 28 // Oana change
+#define kPTKViewCardCVCFieldEndX 99 // Oana change
+#define kPTKViewCardZipCodeFieldEndX 156 // Oana change
 
 static NSString *const kPTKLocalizedStringsTableName = @"PaymentKit";
 static NSString *const kPTKOldLocalizedStringsTableName = @"STPaymentLocalizable";
@@ -174,10 +170,9 @@ static NSString *const kPTKOldLocalizedStringsTableName = @"STPaymentLocalizable
 // Oana change
 - (void)setupCardZipCodeField
 {
-    self.cardZipCodeField = [[PTKTextField alloc] initWithFrame:CGRectMake(kPKViewCardZipCodeFieldStartX, 0, 80, 20)];
+    self.cardZipCodeField = [[PTKTextField alloc] initWithFrame:CGRectMake(kPTKViewCardZipCodeFieldStartX, 0, 80, 20)];
     self.cardZipCodeField.delegate = self;
     self.cardZipCodeField.placeholder = @"ZIP Code";
-    self.cardZipCodeField.keyboardType = UIKeyboardTypeNumberPad;
     self.cardZipCodeField.textColor = DarkGreyColor;
     self.cardZipCodeField.font = DefaultBoldFont;
     
@@ -242,7 +237,7 @@ static NSString *const kPTKOldLocalizedStringsTableName = @"STPaymentLocalizable
                                                                   self.cardCVCField.frame.origin.y,
                                                                   self.cardCVCField.frame.size.width,
                                                                   self.cardCVCField.frame.size.height);
-                             self.cardZipCodeField.frame = CGRectMake(kPKViewCardZipCodeFieldStartX,
+                             self.cardZipCodeField.frame = CGRectMake(kPTKViewCardZipCodeFieldStartX,
                                                                       self.cardZipCodeField.frame.origin.y,
                                                                       self.cardZipCodeField.frame.size.width,
                                                                       self.cardZipCodeField.frame.size.height); // Oana change
@@ -300,7 +295,7 @@ static NSString *const kPTKOldLocalizedStringsTableName = @"STPaymentLocalizable
                                              self.cardCVCField.frame.origin.y,
                                              self.cardCVCField.frame.size.width,
                                              self.cardCVCField.frame.size.height);
-        self.cardZipCodeField.frame = CGRectMake(kPKViewCardZipCodeFieldEndX,
+        self.cardZipCodeField.frame = CGRectMake(kPTKViewCardZipCodeFieldEndX,
                                                  self.cardZipCodeField.frame.origin.y,
                                                  self.cardZipCodeField.frame.size.width,
                                                  self.cardZipCodeField.frame.size.height); // Oana change
@@ -341,7 +336,7 @@ static NSString *const kPTKOldLocalizedStringsTableName = @"STPaymentLocalizable
     card.cvc = [self.cardCVC string];
     card.expMonth = [self.cardExpiry month];
     card.expYear = [self.cardExpiry year];
-    card.addressZip = [self.addressZip string];
+    card.addressZip = [PTKTextField textByRemovingUselessSpacesFromString:[self.cardZipCode string]];
     
     return card;
 }
@@ -541,11 +536,15 @@ static NSString *const kPTKOldLocalizedStringsTableName = @"STPaymentLocalizable
     // Strip non-digits
     self.cardCVCField.text = [cardCVC string];
     
-    if ([cardCVC isValid]) {
+    // Oana change - fix for can't input more than 3 digits for cvv (AMEX)
+    //    if ([cardCVC isValid]) {
+    //        [self textFieldIsValid:self.cardCVCField];
+    //        [self stateCardZipCode];
+    //    } else
+    
+    if ([cardCVC isValidWithType:cardType]) {
         [self textFieldIsValid:self.cardCVCField];
-        [self stateCardZipCode];
-    } else if ([cardCVC isValidWithType:cardType]) {
-        [self textFieldIsValid:self.cardCVCField];
+        [self stateCardZipCode]; // Oana change
     } else {
         [self textFieldIsInvalid:self.cardCVCField withErrors:NO];
     }
@@ -647,7 +646,7 @@ static NSString *const kPTKOldLocalizedStringsTableName = @"STPaymentLocalizable
     if (self.firstInvalidField)
         return self.firstInvalidField;
     
-    return self.cardCVCField;
+    return self.cardZipCodeField; // Oana change
 }
 
 - (BOOL)isFirstResponder;
