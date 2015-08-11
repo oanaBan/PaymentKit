@@ -191,7 +191,7 @@
 
 - (BOOL)isPartiallyValid
 {
-    return return _number.length <= [self lengthForCardType]; // Oana change - deleted [self isValid] || , and added "="
+    return _number.length <= [self lengthForCardType]; // Oana change - deleted [self isValid] || , and added "="
 }
 
 - (NSInteger)lengthForCardType
